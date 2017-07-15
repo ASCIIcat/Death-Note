@@ -87,47 +87,49 @@ public class NoteListener implements Listener{
 			String[] firstPageNames = firstPage.split("\n");
 			List<String> successfulKills = new ArrayList<String>();
 			
-			for(String possibleName : firstPageNames){
-				Player player = Bukkit.getPlayerExact(possibleName);
-				if(player != null){
-					if(player.isOnline()){
-						if(!player.hasPermission("deathnote.exempt")){
-							new DeathTimer(player).runTaskTimer(plugin, 0, 20);
-							successfulKills.add("§m"+player.getName());
+			if(e.getPlayer().hasPermission("deathnote.use")){
+				for(String possibleName : firstPageNames){
+					Player player = Bukkit.getPlayerExact(possibleName);
+					if(player != null){
+						if(player.isOnline()){
+							if(!player.hasPermission("deathnote.exempt")){
+								new DeathTimer(player).runTaskTimer(plugin, 0, 20);
+								successfulKills.add("§m"+player.getName());
+							}
 						}
 					}
 				}
-			}
 			
-			List<String> pages = new ArrayList<String>(e.getNewBookMeta().getPages());
-			List<String> newPages = new ArrayList<String>(pages);
-			
-			for(String pk : new ArrayList<String>(successfulKills)){
-				for(String page : pages){
-					if(page.startsWith("§m")){
-						String[] namesOnPage = page.split("\n");
-						if(namesOnPage.length<12){
-							newPages.set(pages.indexOf(page), page + "\n§m"+pk);
-							break;
-						}else{
+				List<String> pages = new ArrayList<String>(e.getNewBookMeta().getPages());
+				List<String> newPages = new ArrayList<String>(pages);
+				
+				for(String pk : new ArrayList<String>(successfulKills)){
+					for(String page : pages){
+						if(page.startsWith("§m")){
+							String[] namesOnPage = page.split("\n");
+							if(namesOnPage.length<12){
+								newPages.set(pages.indexOf(page), page + "\n§m"+pk);
+								break;
+							}else{
+								if(newPages.size()<50)
+									newPages.add(pages.indexOf(page), "§m"+pk);
+								break;
+							}
+						}else if(page.startsWith("§8")){
 							if(newPages.size()<50)
 								newPages.add(pages.indexOf(page), "§m"+pk);
 							break;
 						}
-					}else if(page.startsWith("§8")){
-						if(newPages.size()<50)
-							newPages.add(pages.indexOf(page), "§m"+pk);
-						break;
 					}
 				}
+				
+				newPages.set(0, "");
+				
+				ItemStack book = e.getPlayer().getInventory().getItemInMainHand();
+				BookMeta nbm = (BookMeta)book.getItemMeta();
+				nbm.setPages(newPages);
+				book.setItemMeta(nbm);
 			}
-			
-			newPages.set(0, "");
-			
-			ItemStack book = e.getPlayer().getInventory().getItemInMainHand();
-			BookMeta nbm = (BookMeta)book.getItemMeta();
-			nbm.setPages(newPages);
-			book.setItemMeta(nbm);
 			
 			e.setCancelled(true);
 			e.getPlayer().removeMetadata("DeathNote", plugin);
