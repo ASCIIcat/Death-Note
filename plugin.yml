@@ -1,0 +1,19 @@
+name: DeathNote
+version: 1.0.0
+main: tech.xfyrewolfx.deathnote.DeathNote
+author: xFyreWolfx
+commands:
+  dn:
+permissions:
+  deathnote.*:
+    default: false
+    children:
+      deathnote.get: true
+      deathnote.use: true
+      deathnote.exempt: true
+  deathnote.get:
+    default: op
+  deathnote.use:
+    default: op
+  deathnote.exempt:
+    default: false;
