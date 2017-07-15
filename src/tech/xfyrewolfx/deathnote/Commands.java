@@ -19,6 +19,9 @@ public class Commands implements CommandExecutor{
 			if(args.length==0 || args.length > 1){
 				sender.sendMessage("§7========= §8DEATH§oN§80TE §7==========");
 				sender.sendMessage("§c/dn get §f- Get a new Death Note");
+				sender.sendMessage("");
+				sender.sendMessage("§5Created by FireBreath15");
+				sender.sendMessage("§5§ohttp://xfyrewolfx.tech/");
 				sender.sendMessage("§7=============================");
 			}else if(args.length==1){
 				if(args[0].equalsIgnoreCase("get")){

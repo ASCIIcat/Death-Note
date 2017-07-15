@@ -9,7 +9,7 @@ public class DeathTimer extends BukkitRunnable {
 	int secs;
 	public DeathTimer(Player pl){
 		p=pl;
-		secs=10;
+		secs=40;
 	}
 	
 	public void run(){
