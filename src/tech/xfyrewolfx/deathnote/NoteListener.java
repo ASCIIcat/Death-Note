@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -21,7 +22,6 @@ public class NoteListener implements Listener{
 	
 	public NoteListener(DeathNote c){
 		plugin = c;
-		System.out.println("Listener loaded");
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -38,6 +38,14 @@ public class NoteListener implements Listener{
 					}
 				}
 			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onDeath(PlayerDeathEvent e){
+		if(e.getEntity().hasMetadata("DeathNote_Killed")){
+			e.getEntity().removeMetadata("DeathNote_Killed", plugin);
+			e.setDeathMessage(plugin.getMessages().deathMessage(e.getEntity().getDisplayName()));
 		}
 	}
 	
@@ -78,7 +86,6 @@ public class NoteListener implements Listener{
 //		}
 //	}
 	
-	// TODO: ignore duplicate entries	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEditBook(PlayerEditBookEvent e){
@@ -93,15 +100,30 @@ public class NoteListener implements Listener{
 					if(player != null){
 						if(player.isOnline()){
 							if(!player.hasPermission("deathnote.exempt")){
-								new DeathTimer(player).runTaskTimer(plugin, 0, 20);
+								new DeathTimer(player, plugin).runTaskTimer(plugin, 0, 20);
 								successfulKills.add("§m"+player.getName());
 							}
 						}
 					}
 				}
-			
+				
+				List<String> oldPages = e.getPreviousBookMeta().getPages();
 				List<String> pages = new ArrayList<String>(e.getNewBookMeta().getPages());
 				List<String> newPages = new ArrayList<String>(pages);
+				
+				for(int i=1; i<oldPages.size(); i++){
+					if(i < newPages.size())
+						newPages.set(i, oldPages.get(i));
+					else newPages.add(i, oldPages.get(i));
+				}
+				
+				if(newPages.size() > oldPages.size()){
+					int dif = newPages.size() - oldPages.size();
+					int osize = newPages.size();
+					for(int i=1; i<=dif; i++){
+						newPages.remove(osize-i);
+					}
+				}
 				
 				for(String pk : new ArrayList<String>(successfulKills)){
 					for(String page : pages){

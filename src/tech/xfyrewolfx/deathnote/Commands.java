@@ -29,15 +29,15 @@ public class Commands implements CommandExecutor{
 						if(sender instanceof Player){
 							((Player)sender).getInventory().addItem(plugin.getNewDeathNote());
 							((Player)sender).getInventory().addItem(new ItemStack(Material.APPLE,3));
-							sender.sendMessage("§8§oA mysterious notebook has entered your inventory");
+							sender.sendMessage(plugin.getMessages().gotDeathnote());
 						}else{
-							sender.sendMessage("§cYou must be mortal to use the Death Note");
+							sender.sendMessage(plugin.getMessages().mustBePlayer());
 						}
 					}else{
-						sender.sendMessage("§cYou are not permitted to acquire a Death Note");
+						sender.sendMessage(plugin.getMessages().noPermission());
 					}
 				}else{
-					sender.sendMessage("§cThe §oShinigami §cdid not recognize your command");
+					sender.sendMessage(plugin.getMessages().wrongCommand());
 				}
 			}
 			return true;
