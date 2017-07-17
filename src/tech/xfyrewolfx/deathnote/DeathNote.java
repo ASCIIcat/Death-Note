@@ -12,12 +12,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class DeathNote extends JavaPlugin{
 	private List<String> DNOwners;
+	private Messages msg;
 	
 	public void onEnable(){
 		DNOwners = new ArrayList<String>();
+		msg = new Messages(this);
 		this.getCommand("dn").setExecutor(new Commands(this));
 		this.getServer().getPluginManager().registerEvents(new NoteListener(this), this);
 		this.getLogger().log(Level.INFO, "The Death Note has been enabled");
+	}
+	
+	public Messages getMessages(){
+		return msg;
 	}
 	
 	public List<String> getOwners(){
