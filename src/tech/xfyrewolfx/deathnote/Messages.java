@@ -25,8 +25,6 @@ public class Messages {
 	    }else{
 	    	this.saveDefaultValues();
 	    }
-	    
-	    plugin.getServer().getLogger().log(Level.INFO, "Loaded Custom Messages");
 	}
 	
 	public void saveDefaultValues(){
