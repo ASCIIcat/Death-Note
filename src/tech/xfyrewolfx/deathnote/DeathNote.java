@@ -15,12 +15,15 @@ public class DeathNote extends JavaPlugin{
 	private Messages msg;
 	private Pages p;
 	
+	private int maxUses;
+	
 	public void onEnable(){
 		DNOwners = new ArrayList<String>();
 		msg = new Messages(this);
 		p = new Pages(this);
 		this.getCommand("dn").setExecutor(new Commands(this));
 		this.getServer().getPluginManager().registerEvents(new NoteListener(this), this);
+		this.loadConfig();
 		this.getLogger().log(Level.INFO, "The Death Note has been enabled");
 	}
 	
@@ -55,5 +58,23 @@ public class DeathNote extends JavaPlugin{
 		
 		note.setItemMeta(im);
 		return note;
+	}
+	
+	/*
+	 * Configuration functions
+	 */
+	
+	public int getMaxUses(){
+		return maxUses;
+	}
+	
+	private void loadConfig(){
+		this.saveDefaultConfig();
+		this.reloadConfig();
+		
+		maxUses = this.getConfig().getInt("max-uses");
+		
+		if(maxUses < 0)
+			maxUses = Integer.MAX_VALUE;
 	}
 }
