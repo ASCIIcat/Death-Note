@@ -1,0 +1,5 @@
+TODO:
+- Handle ownership of the note
+- Ignore duplicate entries
+- Shinigami
+- Tutorial when player picks up new notebook [?]

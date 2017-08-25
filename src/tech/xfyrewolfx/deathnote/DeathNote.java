@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.BookMeta.Generation;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class DeathNote extends JavaPlugin{
@@ -18,6 +17,7 @@ public class DeathNote extends JavaPlugin{
 	private int maxUses;
 	
 	public void onEnable(){
+		new MetricsLite(this);
 		DNOwners = new ArrayList<String>();
 		msg = new Messages(this);
 		p = new Pages(this);
@@ -42,7 +42,6 @@ public class DeathNote extends JavaPlugin{
 		im.setTitle("DeathNote");
 		im.setDisplayName("§8§lDEATH§oN§8§l0TE");
 		im.setAuthor("Unknown");
-		im.setGeneration(Generation.TATTERED);
 		List<String> list = new ArrayList<String>();
 		list.add("");
 		
