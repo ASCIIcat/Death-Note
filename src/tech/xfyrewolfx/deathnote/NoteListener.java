@@ -24,12 +24,18 @@ public class NoteListener implements Listener{
 		plugin = c;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onClick(PlayerInteractEvent e){
 		if(e.getAction()==Action.RIGHT_CLICK_BLOCK || e.getAction()==Action.RIGHT_CLICK_AIR){
-			if(e.getPlayer().getInventory().getItemInMainHand() != null){
-				ItemStack hand = e.getPlayer().getInventory().getItemInMainHand();
-				
+			
+			ItemStack hand;
+			if(plugin.getServer().getBukkitVersion().contains("1.7") || plugin.getServer().getBukkitVersion().contains("1.8"))
+				hand = e.getPlayer().getItemInHand();
+			else 
+				hand = e.getPlayer().getInventory().getItemInMainHand();
+			
+			if(hand != null){
 				if(hand.getType()==Material.BOOK_AND_QUILL && hand.hasItemMeta()){
 					if(hand.getItemMeta().hasDisplayName()){
 						if(hand.getItemMeta().getDisplayName().equals(plugin.getNewDeathNote().getItemMeta().getDisplayName())){
@@ -48,43 +54,6 @@ public class NoteListener implements Listener{
 			e.setDeathMessage(plugin.getMessages().deathMessage(e.getEntity().getDisplayName()));
 		}
 	}
-	
-	// TODO handle note ownership, add some form of Shinigami to the game that only this player can see
-//	@EventHandler
-//	public void holdDeathNote(PlayerItemHeldEvent e){
-//		ItemStack main = e.getPlayer().getInventory().getItemInMainHand();
-//		ItemStack off = e.getPlayer().getInventory().getItemInOffHand();
-//		String uuid = e.getPlayer().getUniqueId().toString();
-//		
-//		if(main != null){
-//			if(main.getType()==Material.BOOK_AND_QUILL && main.hasItemMeta()){
-//				if(main.getItemMeta().hasDisplayName()){
-//					if(main.getItemMeta().getDisplayName().equals(plugin.getNewDeathNote().getItemMeta().getDisplayName())){
-//						if(!plugin.getOwners().contains(uuid))
-//							plugin.getOwners().add(uuid);
-//					}
-//				}
-//			}
-//		}
-//		
-//		if(off != null){
-//			if(off.getType()==Material.BOOK_AND_QUILL && off.hasItemMeta()){
-//				if(off.getItemMeta().hasDisplayName()){
-//					if(off.getItemMeta().getDisplayName().equals(plugin.getNewDeathNote().getItemMeta().getDisplayName())){
-//						if(!plugin.getOwners().contains(uuid))
-//							plugin.getOwners().add(uuid);
-//					}
-//				}
-//			}
-//		}
-//	}
-//	
-//	@EventHandler
-//	public void onDeath(PlayerDeathEvent e){
-//		if(plugin.getOwners().contains(e.getEntity().getUniqueId().toString())){
-//			plugin.getOwners().remove(e.getEntity().getUniqueId().toString());
-//		}
-//	}
 	
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -157,7 +126,12 @@ public class NoteListener implements Listener{
 				// Reset first page
 				newPages.set(0, "");
 				
-				ItemStack book = e.getPlayer().getInventory().getItemInMainHand();
+				ItemStack book;
+				if(plugin.getServer().getBukkitVersion().contains("1.7") || plugin.getServer().getBukkitVersion().contains("1.8"))
+					book = e.getPlayer().getItemInHand();
+				else 
+					book = e.getPlayer().getInventory().getItemInMainHand();
+				
 				BookMeta nbm = (BookMeta)book.getItemMeta();
 				nbm.setPages(newPages);
 				book.setItemMeta(nbm);
